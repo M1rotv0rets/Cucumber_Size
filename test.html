@@ -3,68 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Нейрочат - Умный помощник</title>
+    <title>NeuroChat AI - Умный помощник</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            color: #333;
+            color: #fff;
         }
-
+        
         .chat-container {
             width: 100%;
             max-width: 900px;
-            height: 90vh;
-            background: rgba(255, 255, 255, 0.95);
+            height: 85vh;
+            background: rgba(19, 28, 46, 0.85);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
-            backdrop-filter: blur(10px);
         }
-
+        
+        /* Шапка чата */
         .chat-header {
-            background: linear-gradient(90deg, #6e8efb, #a777e3);
-            color: white;
-            padding: 25px 30px;
+            background: linear-gradient(90deg, #0d7377 0%, #14ffec 100%);
+            padding: 20px 30px;
             text-align: center;
             position: relative;
-            z-index: 2;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-
-        .chat-header h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
+        
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .chat-title {
             font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
             letter-spacing: 1px;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-
-        .chat-header p {
+        
+        .chat-subtitle {
             font-size: 1.1rem;
             opacity: 0.9;
             max-width: 600px;
             margin: 0 auto;
-            line-height: 1.5;
+            position: relative;
         }
-
+        
+        /* Область сообщений */
         .chat-messages {
             flex: 1;
             padding: 25px;
@@ -72,333 +88,252 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23f0f0f0" stroke-width="0.5" opacity="0.3"/></svg>');
-            background-size: 20px;
         }
-
+        
+        /* Стили скроллбара */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #0d7377, #14ffec);
+            border-radius: 10px;
+        }
+        
         .message {
-            max-width: 80%;
-            padding: 18px 25px;
-            border-radius: 25px;
-            animation: fadeIn 0.3s ease-out;
+            max-width: 75%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
             position: relative;
-            line-height: 1.6;
-            font-size: 1.05rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .user-message {
-            background: linear-gradient(90deg, #6e8efb, #5b7cfa);
-            color: white;
             align-self: flex-end;
+            background: linear-gradient(135deg, #0d7377 0%, #14ffec 100%);
+            color: white;
             border-bottom-right-radius: 5px;
         }
-
-        .bot-message {
-            background: white;
+        
+        .ai-message {
             align-self: flex-start;
-            border: 1px solid #eee;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom-left-radius: 5px;
+            backdrop-filter: blur(5px);
         }
-
-        .typing-indicator {
-            display: none;
-            background: white;
-            padding: 15px 25px;
-            border-radius: 25px;
-            align-self: flex-start;
-            border: 1px solid #eee;
-            margin-bottom: 10px;
+        
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
         }
-
-        .typing-indicator span {
-            height: 10px;
-            width: 10px;
-            float: left;
-            margin: 0 3px;
-            background-color: #a777e3;
-            display: block;
-            border-radius: 50%;
-            opacity: 0.4;
-        }
-
-        .typing-indicator span:nth-of-type(1) {
-            animation: typing 1s infinite;
-        }
-
-        .typing-indicator span:nth-of-type(2) {
-            animation: typing 1s infinite 0.2s;
-        }
-
-        .typing-indicator span:nth-of-type(3) {
-            animation: typing 1s infinite 0.4s;
-        }
-
-        .chat-input-container {
+        
+        /* Область ввода */
+        .input-area {
             padding: 20px;
-            background: #f9f9f9;
-            border-top: 1px solid #eee;
+            background: rgba(13, 19, 33, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             gap: 15px;
         }
-
+        
         .message-input {
             flex: 1;
-            padding: 18px 25px;
+            padding: 16px 20px;
             border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            background: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            outline: none;
-            border: 2px solid transparent;
-        }
-
-        .message-input:focus {
-            border-color: #a777e3;
-            box-shadow: 0 4px 20px rgba(167, 119, 227, 0.3);
-        }
-
-        .send-button {
-            background: linear-gradient(90deg, #6e8efb, #a777e3);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.07);
             color: white;
-            border: none;
-            width: 60px;
-            height: 60px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .message-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 2px rgba(20, 255, 236, 0.3);
+        }
+        
+        .message-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .send-button {
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #0d7377 0%, #14ffec 100%);
+            color: white;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
-            box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(13, 115, 119, 0.4);
         }
-
+        
         .send-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(110, 142, 251, 0.6);
+            box-shadow: 0 8px 20px rgba(13, 115, 119, 0.6);
         }
-
+        
         .send-button:active {
             transform: translateY(1px);
         }
-
-        .timestamp {
-            font-size: 0.75rem;
-            color: #999;
-            margin-top: 5px;
-            text-align: right;
+        
+        .send-button i {
+            font-size: 1.3rem;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        /* Индикатор набора сообщения */
+        .typing-indicator {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 18px;
+            display: none;
         }
-
+        
+        .typing-indicator span {
+            height: 10px;
+            width: 10px;
+            background: #14ffec;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1.5s infinite;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
         @keyframes typing {
-            0% {
-                transform: translateY(0px);
-                opacity: 0.4;
-            }
-            50% {
-                transform: translateY(-5px);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(0px);
-                opacity: 0.4;
-            }
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
         }
-
-        .welcome-message {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-            animation: fadeIn 1s ease;
-        }
-
-        .welcome-message h2 {
-            font-family: 'Montserrat', sans-serif;
-            margin-bottom: 15px;
-            color: #6e8efb;
-        }
-
-        .welcome-message p {
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
-
+        
         /* Адаптивность */
         @media (max-width: 768px) {
             .chat-container {
                 height: 95vh;
-            }
-            
-            .message {
-                max-width: 90%;
-                padding: 15px 20px;
+                border-radius: 15px;
             }
             
             .chat-header {
-                padding: 20px 15px;
+                padding: 15px 20px;
             }
             
-            .chat-header h1 {
+            .chat-title {
                 font-size: 1.8rem;
             }
             
-            .message-input {
-                padding: 15px 20px;
+            .chat-subtitle {
+                font-size: 0.95rem;
             }
-        }
-
-        @media (max-width: 480px) {
-            .chat-input-container {
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .input-area {
                 padding: 15px;
             }
-            
-            .send-button {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .chat-header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .chat-header p {
-                font-size: 0.9rem;
-            }
         }
-
-        /* Эффекты для сообщений */
-        .user-message::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            right: -10px;
-            width: 0;
-            height: 0;
-            border: 10px solid transparent;
-            border-bottom-color: #6e8efb;
-            border-right: 0;
-            margin-bottom: -10px;
-        }
-
-        .bot-message::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: -10px;
-            width: 0;
-            height: 0;
-            border: 10px solid transparent;
-            border-bottom-color: white;
-            border-left: 0;
-            margin-bottom: -10px;
-        }
-
-        /* Стили для скроллбара */
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: rgba(245, 245, 245, 0.8);
-            border-radius: 4px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: linear-gradient(#6e8efb, #a777e3);
-            border-radius: 4px;
-        }
-
-        /* Эффект частиц */
+        
+        /* Эффекты частиц */
         .particles {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            pointer-events: none;
             z-index: -1;
-            overflow: hidden;
         }
-
+        
         .particle {
             position: absolute;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(20, 255, 236, 0.5);
             border-radius: 50%;
             animation: float 15s infinite linear;
         }
-
+        
         @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-1000px) translateX(1000px) rotate(720deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
+        <!-- Эффект частиц -->
         <div class="particles" id="particles"></div>
         
+        <!-- Шапка чата -->
         <div class="chat-header">
-            <h1><i class="fas fa-brain"></i> Нейрочат</h1>
-            <p>Умный помощник, готовый ответить на ваши вопросы и помочь с задачами в любое время</p>
+            <h1 class="chat-title">NeuroChat AI</h1>
+            <p class="chat-subtitle">Умный помощник, который ответит на ваши вопросы, поможет с задачами и поддержит беседу</p>
         </div>
         
-        <div class="chat-messages">
-            <div class="welcome-message">
-                <h2>Добро пожаловать в Нейрочат!</h2>
-                <p>Я - ваш умный помощник, созданный на основе передовых нейросетевых технологий. Задавайте любые вопросы, и я постараюсь дать наиболее точный и полезный ответ. Чем могу помочь вам сегодня?</p>
-            </div>
-            
-            <div class="message bot-message">
-                Привет! Я готов помочь вам с любыми вопросами. Что вас интересует?
-                <div class="timestamp">10:15</div>
+        <!-- Область сообщений -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai-message">
+                Привет! Я NeuroChat AI, ваш интеллектуальный помощник. Чем я могу помочь вам сегодня?
+                <div class="message-time">сейчас</div>
             </div>
             
             <div class="message user-message">
-                Привет! Можешь рассказать о своих возможностях?
-                <div class="timestamp">10:16</div>
+                Привет! Расскажи, что ты умеешь?
+                <div class="message-time">сейчас</div>
             </div>
             
-            <div class="message bot-message">
-                Конечно! Я могу отвечать на вопросы, помогать с учебой, объяснять сложные концепции, генерировать идеи, переводить тексты, анализировать данные и многое другое. Спросите что-нибудь!
-                <div class="timestamp">10:17</div>
+            <div class="message ai-message">
+                Я могу ответить на ваши вопросы, помочь с исследованиями, написать код, проанализировать данные, сгенерировать текст и многое другое. Просто расскажите, что вам нужно!
+                <div class="message-time">сейчас</div>
             </div>
             
-            <div class="typing-indicator">
+            <div class="typing-indicator" id="typingIndicator">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
         </div>
         
-        <div class="chat-input-container">
-            <input type="text" class="message-input" placeholder="Введите ваше сообщение...">
-            <button class="send-button">
+        <!-- Область ввода -->
+        <div class="input-area">
+            <input type="text" class="message-input" id="messageInput" placeholder="Напишите сообщение...">
+            <button class="send-button" id="sendButton">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
     </div>
 
     <script>
-        // Создание частиц для фона
+        // Создание эффекта частиц
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = 30;
@@ -407,111 +342,100 @@
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // Случайные параметры
-                const size = Math.random() * 10 + 5;
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                const animationDuration = Math.random() * 20 + 10;
-                const animationDelay = Math.random() * 5;
-                const opacity = Math.random() * 0.5 + 0.2;
-                
+                // Случайный размер
+                const size = Math.random() * 5 + 1;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
+                
+                // Случайное начальное положение
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
                 particle.style.left = `${posX}%`;
                 particle.style.top = `${posY}%`;
-                particle.style.animationDuration = `${animationDuration}s`;
-                particle.style.animationDelay = `${animationDelay}s`;
-                particle.style.opacity = opacity;
+                
+                // Случайная задержка анимации
+                const delay = Math.random() * 15;
+                particle.style.animationDelay = `${delay}s`;
                 
                 particlesContainer.appendChild(particle);
             }
         }
         
-        // Отправка сообщения
+        // Функция отправки сообщения
         function sendMessage() {
-            const input = document.querySelector('.message-input');
+            const input = document.getElementById('messageInput');
             const message = input.value.trim();
             
-            if (message) {
-                // Добавляем сообщение пользователя
-                addMessage(message, 'user');
-                
-                // Очищаем поле ввода
-                input.value = '';
-                
-                // Показываем индикатор набора текста
-                showTypingIndicator();
-                
-                // Имитируем ответ нейросети с задержкой
-                setTimeout(() => {
-                    hideTypingIndicator();
-                    generateResponse(message);
-                }, 1500);
-            }
+            if (message === '') return;
+            
+            // Добавление сообщения пользователя
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Показать индикатор набора
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'block';
+            
+            // Имитация ответа нейросети
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                addMessage(getAIResponse(message), 'ai');
+            }, 1500);
         }
         
         // Добавление сообщения в чат
         function addMessage(text, sender) {
-            const messagesContainer = document.querySelector('.chat-messages');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.classList.add(sender + '-message');
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender + '-message');
             
-            const now = new Date();
-            const timeString = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             
-            messageElement.innerHTML = text + '<div class="timestamp">' + timeString + '</div>';
-            messagesContainer.appendChild(messageElement);
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="message-time">${time}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
             
             // Прокрутка вниз
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-        
-        // Показать индикатор набора текста
-        function showTypingIndicator() {
-            document.querySelector('.typing-indicator').style.display = 'flex';
-            document.querySelector('.chat-messages').scrollTop = document.querySelector('.chat-messages').scrollHeight;
-        }
-        
-        // Скрыть индикатор набора текста
-        function hideTypingIndicator() {
-            document.querySelector('.typing-indicator').style.display = 'none';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
         // Генерация ответа нейросети
-        function generateResponse(userMessage) {
+        function getAIResponse(userMessage) {
             const responses = [
-                "Интересный вопрос! Я могу сказать, что нейросети сегодня способны на многое - от распознавания образов до генерации текстов.",
-                "Отличный вопрос! Моя архитектура позволяет мне понимать контекст и генерировать релевантные ответы.",
-                "Спасибо за ваш запрос! Нейросети обучаются на огромных массивах данных, что позволяет им находить сложные закономерности.",
-                "Хороший вопрос! Я создан на основе трансформерной архитектуры, что позволяет мне эффективно работать с последовательностями.",
-                "Отлично! Я могу помочь с анализом данных, генерацией идей, объяснением сложных концепций и многим другим.",
-                "Интересно! Современные нейросети способны понимать и генерировать человеческий язык на удивительном уровне.",
-                "Замечательно! Я постоянно обучаюсь и совершенствуюсь, чтобы давать более точные и полезные ответы."
+                "Интересный вопрос! Я могу сказать, что нейросети сегодня способны решать самые разнообразные задачи, от распознавания образов до генерации текста.",
+                "Спасибо за ваш запрос. Я проанализировал информацию и могу предложить несколько вариантов решения.",
+                "На основе вашего сообщения я подготовил развернутый ответ, который поможет вам в решении задачи.",
+                "Это важная тема! Я собрал для вас актуальную информацию по данному вопросу.",
+                "Отличный вопрос! Современные нейросети действительно способны на многое. Вот что я могу вам рассказать...",
+                "Я понял ваш запрос. Давайте рассмотрим эту тему подробнее."
             ];
             
-            // Выбираем случайный ответ
-            const response = responses[Math.floor(Math.random() * responses.length)];
-            addMessage(response, 'bot');
+            // Возвращаем случайный ответ из списка
+            return responses[Math.floor(Math.random() * responses.length)];
         }
         
         // Инициализация
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Создаем частицы
             createParticles();
             
-            // Отправка по кнопке
-            document.querySelector('.send-button').addEventListener('click', sendMessage);
+            // Обработчик кнопки отправки
+            document.getElementById('sendButton').addEventListener('click', sendMessage);
             
-            // Отправка по Enter
-            document.querySelector('.message-input').addEventListener('keypress', (e) => {
+            // Обработчик нажатия Enter
+            document.getElementById('messageInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     sendMessage();
                 }
             });
             
             // Фокус на поле ввода
-            document.querySelector('.message-input').focus();
+            document.getElementById('messageInput').focus();
         });
     </script>
 </body>
-  </html>
+</html>
