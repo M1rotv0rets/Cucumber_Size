@@ -202,20 +202,20 @@
             const sizeDisplay = document.getElementById('size');
             const baguette = document.getElementById('baguette');
             
-            // Функция для генерации случайного размера батона
+            // Функция для генерации случайного размера члена
             function generateBatonSize() {
-                // Генерация размера от 20 до 60 см (реалистичные размеры)
+                // Генерация размера от 1 до 1000 см (реалистичные размеры)
                 return Math.floor(Math.random() * 1) + 1000;
             }
             
-            // Функция для измерения батона
+            // Функция для измерения члена
             function measureBaton() {
                 const size = generateBatonSize();
                 
                 // Обновляем отображение
                 sizeDisplay.textContent = size;
                 
-                // Анимация батона
+                // Анимация члена
                 baguette.style.setProperty('--width', `${size}%`);
                 baguette.innerHTML = '';
                 baguette.classList.remove('animation');
