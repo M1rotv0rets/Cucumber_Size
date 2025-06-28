@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroChat AI - Умный помощник</title>
+    <title>DeepMind AI - Чат с нейросетью</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,73 +14,63 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            color: #fff;
+            color: #f0f0f0;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .chat-container {
             width: 100%;
             max-width: 900px;
-            height: 85vh;
-            background: rgba(19, 28, 46, 0.85);
+            height: 90vh;
+            background: rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
+            border: 1px solid rgba(94, 234, 212, 0.2);
         }
         
-        /* Шапка чата */
         .chat-header {
-            background: linear-gradient(90deg, #0d7377 0%, #14ffec 100%);
-            padding: 20px 30px;
+            background: linear-gradient(90deg, #0f172a, #1e293b);
+            padding: 20px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .chat-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
-            animation: shine 3s infinite;
-        }
-        
-        @keyframes shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            border-bottom: 1px solid rgba(94, 234, 212, 0.3);
         }
         
         .chat-title {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-            position: relative;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #5eead4, #38bdf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
         }
         
         .chat-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            font-size: 1rem;
+            color: #94a3b8;
             max-width: 600px;
             margin: 0 auto;
-            position: relative;
+            line-height: 1.5;
         }
         
-        /* Область сообщений */
         .chat-messages {
             flex: 1;
             padding: 25px;
@@ -90,29 +80,28 @@
             gap: 20px;
         }
         
-        /* Стили скроллбара */
+        /* Стилизация скроллбара */
         .chat-messages::-webkit-scrollbar {
             width: 8px;
         }
         
         .chat-messages::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 4px;
         }
         
         .chat-messages::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #0d7377, #14ffec);
-            border-radius: 10px;
+            background: linear-gradient(#5eead4, #38bdf8);
+            border-radius: 4px;
         }
         
         .message {
-            max-width: 75%;
+            max-width: 80%;
             padding: 15px 20px;
             border-radius: 18px;
-            line-height: 1.5;
-            position: relative;
             animation: fadeIn 0.3s ease-out;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            line-height: 1.6;
         }
         
         @keyframes fadeIn {
@@ -121,32 +110,45 @@
         }
         
         .user-message {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
             align-self: flex-end;
-            background: linear-gradient(135deg, #0d7377 0%, #14ffec 100%);
-            color: white;
             border-bottom-right-radius: 5px;
         }
         
         .ai-message {
+            background: rgba(30, 41, 59, 0.8);
             align-self: flex-start;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom-left-radius: 5px;
-            backdrop-filter: blur(5px);
+            border: 1px solid rgba(94, 234, 212, 0.2);
         }
         
-        .message-time {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            margin-top: 5px;
-            text-align: right;
+        .message-avatar {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: -18px;
+            font-size: 16px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
         
-        /* Область ввода */
-        .input-area {
+        .user-avatar {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            right: 10px;
+        }
+        
+        .ai-avatar {
+            background: linear-gradient(135deg, #5eead4, #0d9488);
+            left: 10px;
+        }
+        
+        .chat-input-area {
             padding: 20px;
-            background: rgba(13, 19, 33, 0.9);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.9);
+            border-top: 1px solid rgba(94, 234, 212, 0.2);
             display: flex;
             gap: 15px;
         }
@@ -156,286 +158,234 @@
             padding: 16px 20px;
             border: none;
             border-radius: 50px;
-            background: rgba(255, 255, 255, 0.07);
-            color: white;
+            background: rgba(30, 41, 59, 0.8);
+            color: #f0f0f0;
             font-size: 1rem;
             outline: none;
+            border: 2px solid transparent;
             transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .message-input:focus {
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 0 2px rgba(20, 255, 236, 0.3);
+            border-color: #5eead4;
+            box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.2);
         }
         
         .message-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: #94a3b8;
         }
         
         .send-button {
             width: 55px;
             height: 55px;
             border-radius: 50%;
+            background: linear-gradient(135deg, #5eead4, #38bdf8);
             border: none;
-            background: linear-gradient(135deg, #0d7377 0%, #14ffec 100%);
-            color: white;
+            color: #0f172a;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(13, 115, 119, 0.4);
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
         }
         
         .send-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(13, 115, 119, 0.6);
+            box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
         }
         
         .send-button:active {
-            transform: translateY(1px);
+            transform: translateY(0);
         }
         
-        .send-button i {
-            font-size: 1.3rem;
-        }
-        
-        /* Индикатор набора сообщения */
         .typing-indicator {
-            align-self: flex-start;
-            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
             padding: 15px 20px;
+            background: rgba(30, 41, 59, 0.8);
             border-radius: 18px;
+            align-self: flex-start;
+            border: 1px solid rgba(94, 234, 212, 0.2);
+            margin-top: 10px;
             display: none;
         }
         
         .typing-indicator span {
             height: 10px;
             width: 10px;
-            background: #14ffec;
+            background: #5eead4;
             border-radius: 50%;
             display: inline-block;
-            margin: 0 2px;
-            animation: typing 1.5s infinite;
+            margin: 0 3px;
+            animation: bounce 1.3s linear infinite;
         }
         
         .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
+            animation-delay: 0.15s;
         }
         
         .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
+            animation-delay: 0.3s;
         }
         
-        @keyframes typing {
+        @keyframes bounce {
             0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-5px); }
+            30% { transform: translateY(-7px); }
         }
         
-        /* Адаптивность */
+        .info-text {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            padding: 15px;
+            border-top: 1px solid rgba(94, 234, 212, 0.1);
+        }
+        
         @media (max-width: 768px) {
             .chat-container {
                 height: 95vh;
-                border-radius: 15px;
-            }
-            
-            .chat-header {
-                padding: 15px 20px;
-            }
-            
-            .chat-title {
-                font-size: 1.8rem;
-            }
-            
-            .chat-subtitle {
-                font-size: 0.95rem;
             }
             
             .message {
-                max-width: 85%;
+                max-width: 90%;
             }
             
-            .input-area {
-                padding: 15px;
+            .chat-title {
+                font-size: 1.6rem;
             }
-        }
-        
-        /* Эффекты частиц */
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(20, 255, 236, 0.5);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
-        <!-- Эффект частиц -->
-        <div class="particles" id="particles"></div>
-        
-        <!-- Шапка чата -->
         <div class="chat-header">
-            <h1 class="chat-title">NeuroChat AI</h1>
-            <p class="chat-subtitle">Умный помощник, который ответит на ваши вопросы, поможет с задачами и поддержит беседу</p>
+            <h1 class="chat-title">DeepMind AI Assistant</h1>
+            <p class="chat-subtitle">Передовая нейросеть для решения сложных задач. Задайте любой вопрос и получите развернутый ответ с глубоким анализом.</p>
         </div>
         
-        <!-- Область сообщений -->
-        <div class="chat-messages" id="chatMessages">
+        <div class="chat-messages">
             <div class="message ai-message">
-                Привет! Я NeuroChat AI, ваш интеллектуальный помощник. Чем я могу помочь вам сегодня?
-                <div class="message-time">сейчас</div>
+                <div class="message-avatar ai-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                Привет! Я DeepMind AI — ваша интеллектуальная помощница. Я могу помочь с анализом данных, написанием кода, решением математических задач и многим другим. Чем могу быть полезна сегодня?
             </div>
             
             <div class="message user-message">
-                Привет! Расскажи, что ты умеешь?
-                <div class="message-time">сейчас</div>
+                <div class="message-avatar user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                Привет! Можешь объяснить, как работает машинное обучение простыми словами?
             </div>
             
             <div class="message ai-message">
-                Я могу ответить на ваши вопросы, помочь с исследованиями, написать код, проанализировать данные, сгенерировать текст и многое другое. Просто расскажите, что вам нужно!
-                <div class="message-time">сейчас</div>
+                <div class="message-avatar ai-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                Конечно! Представьте, что вы учите ребенка различать кошек и собак. Вы показываете много картинок, говоря "это кошка", "это собака". Со временем ребенок начинает узнавать их сам. Машинное обучение работает похоже — алгоритм изучает закономерности в данных, чтобы делать прогнозы или принимать решения без явного программирования на каждую ситуацию.
             </div>
             
-            <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-indicator">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
         </div>
         
-        <!-- Область ввода -->
-        <div class="input-area">
-            <input type="text" class="message-input" id="messageInput" placeholder="Напишите сообщение...">
-            <button class="send-button" id="sendButton">
+        <div class="info-text">
+            DeepMind AI может выдавать неточные сведения. Проверяйте важную информацию.
+        </div>
+        
+        <div class="chat-input-area">
+            <input type="text" class="message-input" placeholder="Введите сообщение...">
+            <button class="send-button">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
     </div>
 
     <script>
-        // Создание эффекта частиц
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Случайный размер
-                const size = Math.random() * 5 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Случайное начальное положение
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                
-                // Случайная задержка анимации
-                const delay = Math.random() * 15;
-                particle.style.animationDelay = `${delay}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
+        const chatMessages = document.querySelector('.chat-messages');
+        const messageInput = document.querySelector('.message-input');
+        const sendButton = document.querySelector('.send-button');
+        const typingIndicator = document.querySelector('.typing-indicator');
         
-        // Функция отправки сообщения
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (message === '') return;
-            
-            // Добавление сообщения пользователя
-            addMessage(message, 'user');
-            input.value = '';
-            
-            // Показать индикатор набора
-            const typingIndicator = document.getElementById('typingIndicator');
-            typingIndicator.style.display = 'block';
-            
-            // Имитация ответа нейросети
-            setTimeout(() => {
-                typingIndicator.style.display = 'none';
-                addMessage(getAIResponse(message), 'ai');
-            }, 1500);
-        }
+        // Прокрутка вниз при загрузке
+        chatMessages.scrollTop = chatMessages.scrollHeight;
         
-        // Добавление сообщения в чат
-        function addMessage(text, sender) {
-            const chatMessages = document.getElementById('chatMessages');
+        // Функция добавления сообщения
+        function addMessage(text, isUser) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
-            messageDiv.classList.add(sender + '-message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'ai-message');
             
-            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('message-avatar');
+            avatarDiv.classList.add(isUser ? 'user-avatar' : 'ai-avatar');
+            avatarDiv.innerHTML = `<i class="fas ${isUser ? 'fa-user' : 'fa-brain'}"></i>`;
             
-            messageDiv.innerHTML = `
-                ${text}
-                <div class="message-time">${time}</div>
-            `;
+            messageDiv.appendChild(avatarDiv);
+            messageDiv.innerHTML += text;
             
             chatMessages.appendChild(messageDiv);
-            
-            // Прокрутка вниз
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
-        // Генерация ответа нейросети
-        function getAIResponse(userMessage) {
-            const responses = [
-                "Интересный вопрос! Я могу сказать, что нейросети сегодня способны решать самые разнообразные задачи, от распознавания образов до генерации текста.",
-                "Спасибо за ваш запрос. Я проанализировал информацию и могу предложить несколько вариантов решения.",
-                "На основе вашего сообщения я подготовил развернутый ответ, который поможет вам в решении задачи.",
-                "Это важная тема! Я собрал для вас актуальную информацию по данному вопросу.",
-                "Отличный вопрос! Современные нейросети действительно способны на многое. Вот что я могу вам рассказать...",
-                "Я понял ваш запрос. Давайте рассмотрим эту тему подробнее."
-            ];
+        // Имитация ответа ИИ
+        function simulateAIResponse() {
+            typingIndicator.style.display = 'flex';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
             
-            // Возвращаем случайный ответ из списка
-            return responses[Math.floor(Math.random() * responses.length)];
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                const responses = [
+                    "Интересный вопрос! Нейронные сети действительно вдохновлены биологическими нейронами. Каждый искусственный нейрон получает входные данные, обрабатывает их с помощью весов и функций активации, и передает результат следующим нейронам.",
+                    "Отличная мысль! Современные нейросети могут генерировать текст, изображения, музыку и даже видео. Они обучаются на огромных наборах данных и способны создавать удивительно креативный контент.",
+                    "Это важный аспект искусственного интеллекта. Этика ИИ включает вопросы приватности, прозрачности алгоритмов, предотвращения предвзятости и обеспечения безопасности автономных систем.",
+                    "ИИ уже применяется во многих областях: от медицины (диагностика заболеваний) до экологии (оптимизация использования ресурсов). В будущем он может помочь решить глобальные проблемы человечества.",
+                    "DeepMind — это лаборатория искусственного интеллекта, основанная в 2010 году и приобретенная Google в 2014. Она известна созданием AlphaGo, первой программы, победившей чемпиона мира по игре Го."
+                ];
+                
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(randomResponse, false);
+            }, 2000);
         }
         
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', function() {
-            // Создаем частицы
-            createParticles();
-            
-            // Обработчик кнопки отправки
-            document.getElementById('sendButton').addEventListener('click', sendMessage);
-            
-            // Обработчик нажатия Enter
-            document.getElementById('messageInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-            
-            // Фокус на поле ввода
-            document.getElementById('messageInput').focus();
+        // Отправка сообщения
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                messageInput.value = '';
+                
+                setTimeout(simulateAIResponse, 500);
+            }
+        }
+        
+        // Обработчики событий
+        sendButton.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
         });
+        
+        // Примеры сообщений для демонстрации
+        setTimeout(() => {
+            addMessage("Можешь рассказать о различиях между нейросетями и обычными алгоритмами?", true);
+            setTimeout(() => {
+                typingIndicator.style.display = 'flex';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    addMessage("Конечно! Традиционные алгоритмы следуют жестким правилам, прописанным программистом. Нейросети же учатся на данных: вместо написания правил, мы показываем много примеров, и сеть сама настраивает внутренние параметры (веса) для решения задачи. Это позволяет обрабатывать сложные, неструктурированные данные, такие как изображения или естественный язык.", false);
+                }, 2000);
+            }, 3000);
+        }, 4000);
     </script>
 </body>
-</html>
+    </html>
